@@ -59,23 +59,16 @@ def datestring(df, col):
     return df, val
 
 
-def operant_conv(Opt):
-    if Opt == 'AND':
-        Opt_Conv = '&'
-    elif Opt == 'OR':
-        Opt_Conv = '|'
-    elif Opt == 'NOT':
-        Opt_Conv = '~'
+def operant_conv(Op):
+    if Op == 'AND':
+        Op_Conv = '&'
+    elif Op == 'OR':
+        Op_Conv = '|'
+    elif Op == 'NOT':
+        Op_Conv = '~'
     else:
-        Opt_Conv = Op
-    return Opt_Conv
-
-def operator_conv(Opr):
-    if Opr == '=':
-        Opr_Conv = '=='
-    else:
-        Opr_Conv = Opr
-    return Opr_Conv
+        Op_Conv = Op
+    return Op_Conv
 
 sf = salesforce_reporting.Connection(username='ikeda@zenfoods-grp.com', password='toro2003', security_token='5IoyjJNaki9CTSxDTAbi2S5E')
     #my_sf.get_report('00O2s000000SaeCEAS')
@@ -113,31 +106,31 @@ if D.Filter != '':
             #report = report[pd.DatetimeIndex(report[f_Param[i][f_Col]]).month] == f_Param[i][f_Val]]
     #query文を作成
     for j in range(len(f_Param)):
-        operator = operator_conv(f_Param[j][operator])
         if f_Param[j][f_Val_Type] == 'month':
             print(f_Param[j][f_Val])
             val = str_to_month('', f_Param[j][f_Val])[1]#, format='%YYYY/%mm/%dd'))
             print(val)
             if j == 0:
-                str_query  = f_Param[j][f_Col] +'_f' + operator + str(val)
+                str_query  = f_Param[j][f_Col] +'_f == ' + str(val)
             else:
-                str_query  = str_query + ' ' + f_Op + ' ' + f_Param[j][f_Col] +'_f' + operator + str(val)
+                str_query  = str_query + ' ' + f_Op + ' ' + f_Param[j][f_Col] +'_f == ' + str(val)
 
         elif f_Param[j][f_Val_Type] == 'datestring':
             val = datestring('', f_Param[j][f_Val])[1]#, format='%YYYY/%mm/%dd'))
             if j == 0:
-                str_query  = f_Param[j][f_Col] +'_f' + operator + '"' + str(val) + '"'
+                str_query  = f_Param[j][f_Col] +'_f == ' + '"' + str(val) + '"'
             else:
-                str_query  = str_query + ' ' + f_Op + ' ' + f_Param[j][f_Col]  +'_f' + operator + '"' + str(val) + '"'
+                str_query  = str_query + ' ' + f_Op + ' ' + f_Param[j][f_Col] +'_f == ' + '"' + str(val) + '"'
         else:
             val = f_Param[j][f_Val]
             if j == 0:
-                str_query  = f_Param[j][f_Col] +'_f' + operator + str(val)
+                str_query  = f_Param[j][f_Col] +'_f == ' +  '"' + str(val) + '"'
             else:
-                str_query  = str_query + ' ' + f_Op + ' ' + f_Param[j][f_Col] +'_f' + operator + str(val)
+                str_query  = str_query + ' ' + f_Op + ' ' + f_Param[j][f_Col] +'_f == ' +  '"' + str(val) + '"'
     #if j == 0:
         #    str_query  = f_Param[j][f_Col] +'_f == ' + str(val)
         #else:
+
 
     print(str_query)
     report = report.query(str_query)

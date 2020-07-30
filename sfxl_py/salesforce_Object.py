@@ -25,6 +25,7 @@ sf = Salesforce(username='ikeda@zenfoods-grp.com', password='toro2003', security
 
 #sf = Salesforce(username='', password='', security_token='')
 str_SOQL_main = SOQLs_main[Object_NAME]
+print(str_SOQL_main + str_SOQL_filter)
 sf_data = sf.query_all(str_SOQL_main + str_SOQL_filter)
 object = pd.DataFrame(sf_data['records']).drop(columns='attributes')
 
